@@ -35,3 +35,15 @@ the latest version of the data:
 ```
 dvc pull
 ```
+
+
+If you get the following error while trying to ``dvc pull`` or ``dvc doctor``:
+
+> ERROR: unexpected error - redefinition of group name 'ps_d' as group 2; was group 1 at position 46
+
+This is caused by an incompatibility with pathspec 0.10.0, which was released 2022-08-30. Downgrading to pathspec 0.9.0 should fix this issue.
+
+```
+pip install pathspec==0.9.0 --force-reinstall
+```
+
