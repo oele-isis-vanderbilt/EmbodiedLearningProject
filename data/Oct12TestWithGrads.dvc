@@ -1,0 +1,5 @@
+outs:
+- md5: 44fe7d241b0006ec5e0c7a96f2d5468b.dir
+  size: 11598739870
+  nfiles: 60
+  path: Oct12TestWithGrads

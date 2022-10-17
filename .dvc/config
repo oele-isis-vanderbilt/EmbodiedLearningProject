@@ -1,0 +1,4 @@
+[core]
+    remote = live1-server
+['remote "live1-server"']
+    url = ssh://10.28.128.86:22/home/shared/embodied_learning_data
