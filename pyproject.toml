@@ -1,0 +1,67 @@
+
+[project]
+name = "elp"
+version = "0.0.1"
+description = "Embodied Learning Project"
+authors = [
+    {name = "Joyce Fonteles", email="joyce.h.fonteles@vanderbilt.edu"},
+    {name = "Eduardo Davalos", email="eduardo.davalos.anaya@vanderbilt.edu"}
+]
+license = {file = "LICENSE.txt"}
+readme = "README.md"
+requires-python = ">3.6"
+
+keywords = ["embodied", "learning", "computer vision", "deep learning"]
+
+classifiers = [
+    "Programming Language :: Python :: 3"
+]
+
+dependencies = [
+    'matplotlib',
+    'opencv-python',
+    'pandas',
+    'numpy',
+    'imutils',
+]
+
+[project.optional-dependencies]
+test = [
+    'pytest',
+    'pytest-repeat',
+    'pytest-lazy-fixture',
+    'auto-changelog',
+    'pre-commit',
+]
+
+[project.urls]
+homepath = "https://github.com/oele-isis-vanderbilt/EmbodiedLearningProject"
+documentation = "https://oele-isis-vanderbilt.github.io/EmbodiedLearningProject/"
+repository = "https://github.com/oele-isis-vanderbilt/EmbodiedLearningProject"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# https://setuptools.pypa.io/en/stable/userguide/datafiles.html
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+# Reference:
+# https://stackoverflow.com/questions/4673373/logging-within-pytest-tests
+[tool.pytest.ini_options]
+
+# Logging + CLI
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s.%(msecs)03d [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+# Timeout
+faulthandler_timeout=300
+
+# Ignore warnings
+filterwarnings = "ignore::DeprecationWarning"
