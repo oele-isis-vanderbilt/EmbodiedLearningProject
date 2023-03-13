@@ -15,35 +15,10 @@ logger = logging.getLogger('elp')
 
 # Constants
 GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent.parent
-DATA_ROOT = GIT_ROOT / 'data'
-LOGS_FILEPATH = DATA_ROOT / 'Oct12TestWithGrads' / 'fish-only-logs.csv'
-SCREEN_FILEPATH = DATA_ROOT / 'Oct12TestWithGrads' / 'STEP-01-Run-Fish-screen.mp4'
-CAMERA_FILEPATH = DATA_ROOT / 'Oct12TestWithGrads' / 'STEP-01-Run-Fish-front.mp4'
 
 # Test Configuration
 STEP_SIZE = 0.5 # second
 CROP = {'top': 179, 'left': 580, 'bottom': 73, 'right': 356}
-LOG_OFFSET = 60 * 8 + 38.5
-
-# Basic asserts
-assert LOGS_FILEPATH.exists()
-assert SCREEN_FILEPATH.exists()
-assert CAMERA_FILEPATH.exists()
-
-@pytest.fixture
-def study_data():
-
-    screen = cv2.VideoCapture(str(SCREEN_FILEPATH))
-    camera= cv2.VideoCapture(str(CAMERA_FILEPATH))
-    logs = pd.read_csv(str(LOGS_FILEPATH))
-
-    # Change the logs to have second-based timestamps
-    logs['timestamp'] = pd.to_datetime(logs['timestamp'], format="%H:%M:%S:%f")
-    logs['timestamp'] = (logs['timestamp'] - logs['timestamp'][0]).dt.total_seconds()
-    logs = logs[logs['timestamp'] >= LOG_OFFSET]
-    logs['timestamp'] = logs['timestamp'] - LOG_OFFSET
-
-    return {'screen': screen, 'logs': logs, 'camera': camera}
 
 @pytest.fixture
 def log_processor(study_data):
@@ -95,8 +70,6 @@ def test_processing_logs(study_data, log_processor):
         if result:
             frame = result.render(frame)
 
-        # cv2.imshow('screen', frame)
-        # cv2.imshow('camera', imutils.resize(camera_view, height=400))
         vis = imutils.resize(elp.combine_frames(frame, imutils.resize(camera_view, height=frame.shape[0])), width=1700)
 
 

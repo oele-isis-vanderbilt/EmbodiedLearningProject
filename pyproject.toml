@@ -23,6 +23,8 @@ dependencies = [
     'pandas',
     'numpy',
     'imutils',
+    'tensorflow',
+    'tensorflow-hub'
 ]
 
 [project.optional-dependencies]
