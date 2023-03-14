@@ -33,6 +33,9 @@ def test_processing_gaze(study_data, gaze_processor):
     screen = study_data['screen']
     camera = study_data['camera']
 
+    # Change the starting time of the camera
+    camera.set(cv2.CAP_PROP_POS_FRAMES, 24*60*5)
+
     # Determine the FPS and use that to compute a timestamp
     fps = screen.get(cv2.CAP_PROP_FPS)
     length = int(screen.get(cv2.CAP_PROP_FRAME_COUNT))
