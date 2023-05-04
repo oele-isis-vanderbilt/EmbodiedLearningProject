@@ -1,23 +1,38 @@
 from typing import Dict
+import collections
 
+import imutils
 import numpy as np
 import cv2
 import tensorflow as tf
 import tensorflow_hub as hub
-from deepface import DeepFace
-from retinaface import RetinaFace
+# from deepface import DeepFace
+# from retinaface import RetinaFace
+# import mediapipe as mp
+from face_detection import RetinaFace
 
 # Reference:
 # https://towardsdatascience.com/real-time-head-pose-estimation-in-python-e52db1bc606a
 
 # Constants:
 MODEL_POINTS = np.array([
-    (0.0, 0.0, 0.0),             # Nose tip
-    (-150.0, 170.0, -135.0),     # Left eye left corner
     (150.0, 170.0, -135.0),      # Right eye right corne
+    (-150.0, 170.0, -135.0),     # Left eye left corner
+    (0.0, 0.0, 0.0),             # Nose tip
+    (150.0, -150.0, -125.0),      # Right mouth corner
     (-150.0, -150.0, -125.0),    # Left Mouth corner
-    (150.0, -150.0, -125.0)      # Right mouth corner
 ])
+
+# FW = 300
+# FD = 135
+# FH = 300
+# MODEL_POINTS = np.array([
+#     (0.0, 0.0, 0.0),        # Nose tip
+#     (-FW/2, FH/4, -FD),     # Left eye left corner
+#     (FW/2, FH/4, -FD),      # Right eye right corne
+#     (-FW/2, -FH/2, -FD),    # Left Mouth corner
+#     (FW/2, -FH/2, -FD)      # Right mouth corner
+# ])
 
 # Camera internals
 H = 1080
@@ -47,11 +62,12 @@ class GazeResult:
             start_point = (int(x1), int(y1))
             end_point = (int(x2), int(y2))
             frame = cv2.rectangle(frame, start_point, end_point, (255,0,0), 2)
+            frame = cv2.putText(frame, f"{face_data['score']:.2f}", start_point, cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2, cv2.LINE_AA)
 
             # Draw the other landmarks
-            for lm in ['right_eye', 'left_eye', 'nose', 'mouth_right', 'mouth_left']:
+            for lm, color in {'right_eye': (0,0,255), 'left_eye': (0,255,0), 'nose':(255,0,0), 'mouth_right':(255,255,255), 'mouth_left':(255,255,0)}.items():
                 raw = face_data['landmarks'][lm]
-                frame = cv2.circle(frame, (int(raw[0]), int(raw[1])), 2, (0,0,255), -1)
+                frame = cv2.circle(frame, (int(raw[0]), int(raw[1])), 2, color, -1)
 
             # Draw the gaze vector
             # Project a 3D point (0, 0, 1000.0) onto the image plane.
@@ -68,24 +84,34 @@ class GazeResult:
 
 class GazeProcessor():
     
-    def __init__(self, start_time):
+    def __init__(self, start_time, face_confidence: float = 0.75):
         # Load model
-        ...
-        
+        # STEP 2: Create an FaceDetector object.
+        self.detector = RetinaFace()
+        self.face_confidence = face_confidence
 
     def step(self, frame: np.ndarray, timestamp: float):
 
-        # results = DeepFace.extract_faces(frame, detector_backend="retinaface")
-        results = RetinaFace.detect_faces(frame)
+        output = self.detector(frame)
 
-        for face_id, face_data in results.items():
-            image_points = np.array([
-                face_data['landmarks']['nose'],
-                face_data['landmarks']['left_eye'],
-                face_data['landmarks']['right_eye'],
-                face_data['landmarks']['mouth_left'],
-                face_data['landmarks']['mouth_right'],
-            ], dtype="double")
+        results = collections.defaultdict(dict)
+
+        for face_id, face_data in enumerate(output):
+            bbox, image_points, score = face_data
+
+            # Prun bad face detection
+            if score < self.face_confidence:
+                continue
+
+            results[face_id]['facial_area'] = bbox
+            results[face_id]['score'] = score
+            results[face_id]['landmarks'] = {
+                'right_eye': image_points[0],
+                'left_eye': image_points[1],
+                'nose': image_points[2],
+                'mouth_right': image_points[3],
+                'mouth_left': image_points[4],
+            }
 
             (success, rotation_vector, translation_vector) = cv2.solvePnP(MODEL_POINTS, image_points, camera_matrix, DIST_COEFFS, flags=cv2.SOLVEPNP_UPNP)
 
