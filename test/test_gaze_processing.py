@@ -2,6 +2,7 @@ import pathlib
 import os
 import logging
 import pdb
+import json
 
 import pytest
 import cv2
@@ -43,12 +44,13 @@ def test_processing_gaze(study_data, gaze_processor):
     result = None
     
     # Video writer to saving the output (demoing)
-    # writer = cv2.VideoWriter(
-    #     str(GIT_ROOT/'test'/'output'/f"gaze_processing.avi"),
-    #     cv2.VideoWriter_fourcc(*'DIVX'),
-    #     fps=fps,
-    #     frameSize=[1700, 573]
-    # )
+    writer = cv2.VideoWriter(
+        str(GIT_ROOT/'test'/'output'/f"gaze_processing.avi"),
+        cv2.VideoWriter_fourcc(*'DIVX'),
+        fps=fps,
+        frameSize=[1920, 1080]
+    )
+    results = []
 
     # Continue processing video
     for i in range(length):
@@ -60,14 +62,18 @@ def test_processing_gaze(study_data, gaze_processor):
         ret, frame = camera.read()
 
         result = gaze_processor.step(frame, timestamp)
+        results.append(result.container)
 
         if result:
             frame = result.render(frame)
 
         cv2.imshow('output', frame)
-        # writer.write(vis)
+        writer.write(frame)
         if cv2.waitKey(1) == ord('q'):
             break
 
     cv2.destroyAllWindows()
-    # writer.release()
+    writer.release()
+
+    # with open(GIT_ROOT/'test'/'output'/'gaze.json', 'w') as f:
+    #     json.dump(results, f)

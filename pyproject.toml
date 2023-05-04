@@ -24,7 +24,8 @@ dependencies = [
     'numpy',
     'imutils',
     'tensorflow',
-    'tensorflow-hub'
+    'tensorflow-hub',
+    'deepface'
 ]
 
 [project.optional-dependencies]
