@@ -4,8 +4,8 @@ import collections
 import imutils
 import numpy as np
 import cv2
-import tensorflow as tf
-import tensorflow_hub as hub
+# import tensorflow as tf
+# import tensorflow_hub as hub
 # from deepface import DeepFace
 # from retinaface import RetinaFace
 # import mediapipe as mp
@@ -84,7 +84,7 @@ class GazeResult:
 
 class GazeProcessor():
     
-    def __init__(self, start_time, face_confidence: float = 0.75):
+    def __init__(self, start_time, face_confidence: float = 0.8):
         # Load model
         # STEP 2: Create an FaceDetector object.
         self.detector = RetinaFace()

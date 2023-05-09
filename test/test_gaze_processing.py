@@ -4,11 +4,14 @@ import logging
 import pdb
 import json
 
+import torch
 import pytest
 import cv2
 import pandas as pd
 import numpy as np
 import imutils
+
+from l2cs import Pipeline, render
 
 import elp
 
@@ -35,7 +38,7 @@ def test_processing_gaze(study_data, gaze_processor):
     camera = study_data['camera']
 
     # Change the starting time of the camera
-    camera.set(cv2.CAP_PROP_POS_FRAMES, 24*60*6)
+    camera.set(cv2.CAP_PROP_POS_FRAMES, 24*60*5)
 
     # Determine the FPS and use that to compute a timestamp
     fps = screen.get(cv2.CAP_PROP_FPS)
@@ -48,9 +51,16 @@ def test_processing_gaze(study_data, gaze_processor):
         str(GIT_ROOT/'test'/'output'/f"gaze_processing.avi"),
         cv2.VideoWriter_fourcc(*'DIVX'),
         fps=fps,
-        frameSize=[1920, 1080]
+        # frameSize=[1920, 1080]
+        frameSize=[1080, 607]
     )
     results = []
+
+    gaze_pipeline = Pipeline(
+        weights=GIT_ROOT / 'models' / 'L2CSNet_gaze360.pkl',
+        arch='ResNet50',
+        device=torch.device('cpu') # or 'gpu'
+    )
 
     # Continue processing video
     for i in range(length):
@@ -61,13 +71,13 @@ def test_processing_gaze(study_data, gaze_processor):
         # Get the data
         ret, frame = camera.read()
 
-        frame = imutils.resize(frame, width=1000)
+        if not ret:
+            break
 
-        result = gaze_processor.step(frame, timestamp)
-        results.append(result.container)
+        frame = imutils.resize(frame, width=1080)
 
-        if result:
-            frame = result.render(frame)
+        results = gaze_pipeline.step(frame)
+        frame = render(frame, results)
 
         cv2.imshow('output', frame)
         writer.write(frame)
