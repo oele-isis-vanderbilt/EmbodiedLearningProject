@@ -10,6 +10,7 @@ import cv2
 import pandas as pd
 import numpy as np
 import imutils
+from dataclasses import asdict
 
 from l2cs import Pipeline, render
 
@@ -24,21 +25,15 @@ GIT_ROOT = pathlib.Path(os.path.abspath(__file__)).parent.parent
 STEP_SIZE = 0.5 # second
 CROP = {'top': 179, 'left': 580, 'bottom': 73, 'right': 356}
 
-@pytest.fixture
-def gaze_processor(study_data):
-    return elp.GazeProcessor(
-        start_time=study_data['logs'].iloc[0].timestamp,
-    )
 
-
-def test_processing_gaze(study_data, gaze_processor):
+def test_processing_gaze(study_data):
 
     # Extract the study data
     screen = study_data['screen']
     camera = study_data['camera']
 
     # Change the starting time of the camera
-    camera.set(cv2.CAP_PROP_POS_FRAMES, 24*60*5)
+    # camera.set(cv2.CAP_PROP_POS_FRAMES, 24*60*4)
 
     # Determine the FPS and use that to compute a timestamp
     fps = screen.get(cv2.CAP_PROP_FPS)
@@ -56,14 +51,25 @@ def test_processing_gaze(study_data, gaze_processor):
     )
     results = []
 
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')
+
     gaze_pipeline = Pipeline(
         weights=GIT_ROOT / 'models' / 'L2CSNet_gaze360.pkl',
         arch='ResNet50',
-        device=torch.device('cpu') # or 'gpu'
+        device=device # or 'gpu'
     )
+    
+    # Write the game state
+    gaze_file = GIT_ROOT/'test'/'output'/"gaze_logs.csv"
+    if gaze_file.exists():
+        os.remove(gaze_file)
 
     # Continue processing video
     for i in range(length):
+    # for i in range(5):
 
         # Compute a timestamp
         timestamp += 1/fps
@@ -78,6 +84,15 @@ def test_processing_gaze(study_data, gaze_processor):
 
         results = gaze_pipeline.step(frame)
         frame = render(frame, results)
+
+        gaze_df = pd.Series(asdict(results)).to_frame().T
+        
+        gaze_df.to_csv(
+            str(gaze_file),
+            mode='a',
+            header=not gaze_file.exists(),
+            index=False
+        )
 
         cv2.imshow('output', frame)
         writer.write(frame)

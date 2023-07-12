@@ -49,8 +49,15 @@ def test_processing_logs(study_data, log_processor):
         frameSize=[1700, 573]
     )
 
+    # Write the game state
+    game_state_file = GIT_ROOT/'test'/'output'/"log_game_state.csv"
+    prev_game_state = {}
+    # if game_state_file.exists():
+    #     os.remove(game_state_file)
+
     # Continue processing video
     for i in range(length):
+    # for i in range(100):
 
         # Compute a timestamp
         timestamp += 1/fps
@@ -69,6 +76,18 @@ def test_processing_logs(study_data, log_processor):
 
         if result:
             frame = result.render(frame)
+            state = result.container['id_records']
+            game_state_df = pd.Series({'frame_id': i ,'state': state, 'change': state != prev_game_state}).to_frame().T
+            prev_game_state = result.container['id_records']
+        else:
+            game_state_df = pd.Series({'frame_id': i ,'state': prev_game_state, 'change': False}).to_frame().T
+
+        game_state_df.to_csv(
+            str(game_state_file),
+            mode='a',
+            header=not game_state_file.exists(),
+            index=False
+        )
 
         vis = imutils.resize(elp.combine_frames(frame, imutils.resize(camera_view, height=frame.shape[0])), width=1700)
 
