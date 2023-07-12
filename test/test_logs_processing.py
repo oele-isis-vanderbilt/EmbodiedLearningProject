@@ -99,3 +99,50 @@ def test_processing_logs(study_data, log_processor):
 
     cv2.destroyAllWindows()
     writer.release()
+
+def test_visualize_logs(study_data, log_processor):
+
+    # Extract the study data
+    screen = study_data['screen']
+    camera = study_data['camera']
+
+    # Determine the FPS and use that to compute a timestamp
+    fps = screen.get(cv2.CAP_PROP_FPS)
+    length = int(screen.get(cv2.CAP_PROP_FRAME_COUNT))
+    timestamp = 0
+    result = None
+
+    # Write the game state
+    game_state_file = GIT_ROOT/'data'/'Oct12TestWithGrads'/"log_game_state.csv"
+    game_state = pd.read_csv(game_state_file)
+
+    # Continue processing video
+    for i in range(length):
+    # for i in range(100):
+
+        # Compute a timestamp
+        timestamp += 1/fps
+
+        # Get the data
+        ret, frame = screen.read()
+        ret, camera_view = camera.read()
+
+        # Crop the frame to only get the play area
+        frame = frame[CROP['top']:-CROP['bottom'], CROP['left']:-CROP['right']]
+        
+        # Get a slice of the event logs
+        id_records = eval(game_state.iloc[i].to_dict()['state'])
+
+        result = elp.LogResult(
+            id_records=id_records,
+            timestamp=timestamp,
+            corrections={'OFFSET': (-180,-260), 'AFFINE': (2.25,2)}
+        )
+        frame = result.render(frame)
+        vis = imutils.resize(elp.combine_frames(frame, imutils.resize(camera_view, height=frame.shape[0])), width=1700)
+
+        cv2.imshow('output', vis)
+        if cv2.waitKey(1) == ord('q'):
+            break
+
+    cv2.destroyAllWindows()

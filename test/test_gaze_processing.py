@@ -13,6 +13,7 @@ import imutils
 from dataclasses import asdict
 
 from l2cs import Pipeline, render
+from l2cs.results import GazeResultContainer
 
 import elp
 
@@ -104,3 +105,49 @@ def test_processing_gaze(study_data):
 
     # with open(GIT_ROOT/'test'/'output'/'gaze.json', 'w') as f:
     #     json.dump(results, f)
+
+
+def test_visualize_gaze_logs(study_data):
+
+    # Extract the study data
+    screen = study_data['screen']
+    camera = study_data['camera']
+
+    # Change the starting time of the camera
+    # camera.set(cv2.CAP_PROP_POS_FRAMES, 24*60*4)
+
+    # Determine the FPS and use that to compute a timestamp
+    fps = screen.get(cv2.CAP_PROP_FPS)
+    length = int(screen.get(cv2.CAP_PROP_FRAME_COUNT))
+    timestamp = 0
+    result = None
+    
+    # Load the game state
+    gaze_file = GIT_ROOT/'data'/'Oct12TestWithGrads'/"gaze_logs.csv"
+    gaze_logs = pd.read_csv(gaze_file)
+
+    # Continue processing video
+    for i in range(length):
+    # for i in range(5):
+
+        # Compute a timestamp
+        timestamp += 1/fps
+
+        # Get the data
+        ret, frame = camera.read()
+
+        if not ret:
+            break
+
+        frame = imutils.resize(frame, width=1080)
+
+        text_results = gaze_logs.iloc[i]
+
+        results = GazeResultContainer(**elp.utils.gaze_container_from_text(text_results.to_dict()))
+        frame = render(frame, results)
+
+        cv2.imshow('output', frame)
+        if cv2.waitKey(1) == ord('q'):
+            break
+
+    cv2.destroyAllWindows()

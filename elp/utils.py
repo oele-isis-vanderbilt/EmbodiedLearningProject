@@ -2,6 +2,27 @@
 import cv2
 import numpy as np
 
+def string_to_numpy(string, shape):
+    string = string.replace('[', '').replace(']', '').replace('\n', '')
+    array = np.fromstring(string, sep=' ')
+    array = array.reshape(shape)
+    return array
+
+def gaze_container_from_text(gaze_log_dict):
+
+    shape_map = {
+        'pitch': (-1),
+        'yaw': (-1),
+        'bboxes': (-1,4),
+        'landmarks': (-1,5,2),
+        'scores': (-1)
+    }
+
+    for k in gaze_log_dict:
+        gaze_log_dict[k] = string_to_numpy(gaze_log_dict[k], shape_map[k])
+
+    return gaze_log_dict
+
 
 def ensure_rgb(img):
 
