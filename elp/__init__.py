@@ -3,6 +3,5 @@
 from ._logger import setup
 setup()
 
-from .log_processor import LogProcessor
-from .gaze_processor import GazeProcessor
+from .log_processor import LogProcessor, LogResult
 from .utils import combine_frames
