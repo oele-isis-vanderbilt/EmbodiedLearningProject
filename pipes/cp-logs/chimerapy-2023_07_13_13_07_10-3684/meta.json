@@ -1,0 +1,33 @@
+{
+  "workers": [
+    "3ee74a8a-69c9-4c4f-951d-eeeb4fe26097"
+  ],
+  "nodes": [
+    "9440290e-c5c6-42f1-9b55-2e875d37a743",
+    "b554aa3d-4630-4b47-b1d6-efbef1bab4b1",
+    "e9c0be6e-efc6-4ab2-9059-038edcf68c41"
+  ],
+  "worker_graph_map": {
+    "3ee74a8a-69c9-4c4f-951d-eeeb4fe26097": [
+      "9440290e-c5c6-42f1-9b55-2e875d37a743",
+      "b554aa3d-4630-4b47-b1d6-efbef1bab4b1",
+      "e9c0be6e-efc6-4ab2-9059-038edcf68c41"
+    ]
+  },
+  "nodes_server_table": {
+    "9440290e-c5c6-42f1-9b55-2e875d37a743": {
+      "host": "192.168.0.171",
+      "port": 0
+    },
+    "b554aa3d-4630-4b47-b1d6-efbef1bab4b1": {
+      "host": "192.168.0.171",
+      "port": 41633
+    },
+    "e9c0be6e-efc6-4ab2-9059-038edcf68c41": {
+      "host": "192.168.0.171",
+      "port": 0
+    }
+  },
+  "start_time": "2023_07_13_13_07_17.767951",
+  "stop_time": "2023_07_13_13_07_24.419544"
+}
