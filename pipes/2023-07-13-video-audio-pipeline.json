@@ -1,0 +1,155 @@
+{
+  "mode": "record",
+  "workers": {
+    "manager_ip": "",
+    "manager_port": 9001,
+    "instances": [
+      {
+        "name": "worker-1",
+        "id": "worker-1",
+        "description": "worker for the Embodied Learning (Video and Audio)",
+        "remote": true
+      },
+      {
+        "name": "worker-2",
+        "id": "worker-2",
+        "description": "worker for the Embodied Learning (Video and Audio)",
+        "remote": true
+      },
+      {
+        "name": "worker-3",
+        "id": "worker-3",
+        "description": "worker for the Embodied Learning (Video and Audio)",
+        "remote": true
+      },
+      {
+        "name": "worker-4",
+        "id": "worker-4",
+        "description": "worker for the Embodied Learning (Video and Audio)",
+        "remote": true
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "registry_name": "MMLAPIPE_AudioNode",
+      "name": "audio-1",
+      "kwargs": {
+        "backend": "pyaudio",
+        "input_device_id": 13,
+        "audio_format": "INT16",
+        "sample_rate": "RATE_44100",
+        "chunk_size": "CHUNK_4096",
+        "save_name": "audio-1"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "video-1",
+      "kwargs": {
+        "video_src": 0,
+        "width": 640,
+        "frame_key": "frame",
+        "include_meta": true
+      },
+    "package": "mmlapipe"
+    },
+    {
+        "registry_name": "MMLAPIPE_AudioNode",
+      "name": "audio-2",
+      "kwargs": {
+        "backend": "pyaudio",
+        "input_device_id": 13,
+        "audio_format": "INT16",
+        "sample_rate": "RATE_44100",
+        "chunk_size": "CHUNK_4096",
+        "save_name": "audio-2"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "video-2",
+      "kwargs": {
+        "video_src": 0,
+        "width": 640,
+        "frame_key": "frame",
+        "include_meta": true
+      },
+    "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_AudioNode",
+      "name": "audio-3",
+      "kwargs": {
+        "backend": "pyaudio",
+        "input_device_id": 13,
+        "audio_format": "INT16",
+        "sample_rate": "RATE_44100",
+        "chunk_size": "CHUNK_4096",
+        "save_name": "audio-3"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "video-3",
+      "kwargs": {
+        "video_src": 0,
+        "width": 640,
+        "frame_key": "frame",
+        "include_meta": true
+      },
+    "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_AudioNode",
+      "name": "audio-4",
+      "kwargs": {
+        "backend": "pyaudio",
+        "input_device_id": 13,
+        "audio_format": "INT16",
+        "sample_rate": "RATE_44100",
+        "chunk_size": "CHUNK_4096",
+        "save_name": "audio-4"
+      },
+      "package": "mmlapipe"
+    },
+    {
+      "registry_name": "MMLAPIPE_Video",
+      "name": "video-4",
+      "kwargs": {
+        "video_src": 0,
+        "width": 640,
+        "frame_key": "frame",
+        "include_meta": true
+      },
+    "package": "mmlapipe"
+    }
+
+  ],
+  "adj": [],
+  "manager_config": {
+    "logdir": "cp-logs",
+    "port": 9001
+  },
+  "mappings": {
+    "worker-1": [
+      "audio-1",
+      "video-1"
+    ],
+    "worker-2": [
+      "audio-2",
+      "video-2"
+    ],
+    "worker-3": [
+      "audio-2",
+      "video-2"
+    ],
+    "worker-4": [
+      "audio-2",
+      "video-2"
+    ]
+  }
+}
