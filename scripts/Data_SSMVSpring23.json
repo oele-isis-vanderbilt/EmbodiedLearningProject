@@ -1,0 +1,117 @@
+{
+   "project_Name": "SSMVSpring23",
+   "project_path": "data/SSMVSpring23",
+   "model_name": "predicting_finch_migration",
+   "data_stracture": [
+      {
+         "repository_name": "Day1- 1st",
+         "date": "13-02-2023",
+         "log_type": [
+            "rtlogs",
+            "video_with_screen"
+         ],
+         "timestems": [
+            {
+               "Start_imestemp": "HH-MM-SS",
+               "end_imestemp": "HH-MM-SS",
+               "start_to_end_round": true
+            }
+         ]
+      },
+      {
+         "repository_name": "Day1- 2nd",
+         "date": "13-02-2023",
+         "log_type": [
+            "rtlogs",
+            "video_with_screen"
+         ],
+         "timestems": [
+            {
+               "Start_imestemp": "HH-MM-SS",
+               "end_imestemp": "HH-MM-SS",
+               "start_to_end_round": true
+            }
+         ]
+      },
+      {
+         "repository_name": "Day3- 1st",
+         "date": "22-02-2023",
+         "log_type": [
+            "rtlogs",
+            "logs",
+            "video_with_screen"
+         ],
+         "timestems": [
+            {
+               "Start_imestemp": "HH-MM-SS",
+               "end_imestemp": "HH-MM-SS",
+               "start_to_end_round": true
+            }
+         ]
+      },
+      {
+         "repository_name": "Day3- 2nd",
+         "date": "22-02-2023",
+         "log_type": [
+            "rtlogs",
+            "video_with_screen"
+         ],
+         "timestems": [
+            {
+               "Start_imestemp": "HH-MM-SS",
+               "end_imestemp": "HH-MM-SS",
+               "start_to_end_round": true
+            }
+         ]
+      },
+      {
+         "repository_name": "Day3- 3rd",
+         "date": "22-02-2023",
+         "log_type": [
+            "rtlogs",
+            "video_with_screen"
+         ],
+         "timestems": [
+            {
+               "Start_imestemp": "HH-MM-SS",
+               "end_imestemp": "HH-MM-SS",
+               "start_to_end_round": true
+            }
+         ]
+      }
+   ],
+   "visualizations": [
+      "plot_every_second",
+      "plot_paths_gradualy_longer",
+      "etc"
+   ],
+   "logic_and_interaction": {
+      "scientist": {
+         "pickup_a_bird": {
+            "Touches": "finch",
+            "Costume": "SF_scientistcarrying.png",
+            "carrying": true
+         },
+         "drop_bird_in_nest": {
+            "Touches": "nest",
+            "Costume": "SF_scientist.png",
+            "carrying": false
+         },
+         "compare_smaller": {
+            "Touches": "scientist",
+            "Costume": "SF_scientistcarryingsmaller.png",
+            "carrying": true
+         },
+         "compare_bigger": {
+            "Touches": "scientist",
+            "Costume": "SF_scientistcarryinglarger.png",
+            "carrying": true
+         },
+         "end_round": {
+            "Touches": "clipboard",
+            "Costume": "SF_scientist.png",
+            "carrying": false
+         }
+      }
+   }
+}

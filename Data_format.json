@@ -1,0 +1,38 @@
+{
+   "project_Name": "AAA",
+   "project_path": "relative path",
+   "model_name": "name",
+   "data_stracture": [
+      {
+         "repository_name": "name of each repository",
+         "date": "DD-MM-YYYY",
+         "log_type": [
+            "rtlogs",
+            "logs",
+            "screen_recording",
+            "video_with_screen"
+         ],
+         "timestems": [
+            {
+               "Start_imestemp": "HH-MM-SS",
+               "end_imestemp": "HH-MM-SS",
+               "start_to_end_round": true
+            }
+         ]
+      }
+   ],
+   "visualizations": [
+      "plot_every_second",
+      "plot_paths_gradualy_longer",
+      "etc"
+   ],
+   "logic_and_interaction": {
+      "CharacterType": {
+         "Action1": {
+            "Touches": "abc",
+            "Costume": "abc.png",
+            "otherFeatures": "abc"
+         }
+      }
+   }
+}
