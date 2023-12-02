@@ -6,17 +6,29 @@
       {
          "repository_name": "name of each repository",
          "date": "DD-MM-YYYY",
-         "log_type": [
+         "data_streams": [
             "rtlogs",
             "logs",
             "screen_recording",
-            "video_with_screen"
-         ],
-         "timestems": [
+            "front_camera_left",
+            "front_camera_right",
+            "back_camera_left",
+            "back_camera_right"
+            ],
+         "rounds": [
             {
-               "Start_imestemp": "HH-MM-SS",
-               "end_imestemp": "HH-MM-SS",
-               "start_to_end_round": true
+               "ID": "123",
+               "comment": "aaa",
+               "timestempsource": "choose from data_streams",
+               "segment_for_analysis": [
+                  {
+                     "comment": "aaa",
+                     "Start_imestemp": "HH-MM-SS-MS",
+                     "end_imestemp": "HH-MM-SS-MS"
+                  }
+               ],
+               "Start_imestemp": "HH-MM-SS-MS",
+               "end_imestemp": "HH-MM-SS-MS"
             }
          ]
       }
@@ -26,13 +38,18 @@
       "plot_paths_gradualy_longer",
       "etc"
    ],
-   "logic_and_interaction": {
-      "CharacterType": {
-         "Action1": {
-            "Touches": "abc",
-            "Costume": "abc.png",
+   "logic_and_interaction": [
+      {
+         "character_type": "copy type form code",
+         "standard_costume": "abc.png",
+         "actions": [
+         {
+            "Action_Description": "name",
+            "touches": "abc",
+            "costume": "abc.png",
             "otherFeatures": "abc"
          }
+      ]
       }
-   }
+   ]
 }
