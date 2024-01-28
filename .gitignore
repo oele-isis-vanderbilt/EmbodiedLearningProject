@@ -1,4 +1,5 @@
 scripts/gaze/ZoeDepth
+scripts/gaze/models
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
