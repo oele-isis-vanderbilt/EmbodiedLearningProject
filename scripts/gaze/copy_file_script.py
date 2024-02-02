@@ -39,8 +39,14 @@ def copy_random_pngs(src_dir: pathlib.Path, dst_dir: pathlib.Path, N: int):
 # src_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd1g1'
 # dst_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd1g1_sample'
 
-src_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd1g2'
-dst_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd1g2_sample'
+# src_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd1g2'
+# dst_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd1g2_sample'
+        
+src_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd2g1'
+dst_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd2g1_sample'
+
+# src_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd2g2'
+# dst_dir = DATA_DIR / 'reid' / 'cropped_faces' / 'd2g2_sample'
 
 N = 100 # Number of random images you want to copy
 
