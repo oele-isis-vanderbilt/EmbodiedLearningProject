@@ -1,49 +1,22 @@
-# EmbodiedLearningProject
-Official Repository for Embodied Learning Project
+# Offical Repo for 3D Gaze Tracking in Embodied Learning
 
-## :telescope: Data
+Within this repo, the code required to perform 3D gaze, including depth estimation, gaze estimation, 3d reconstruction, and gaze ray tracking can be found. The 2D gaze tracking method can be found [here](https://github.com/oele-isis-vanderbilt/GazeAnalysisLI).
 
-The ``data`` folder is not included in the GitHub repository for memory
-size limitations. We are using [DVC](https://dvc.org/) to
-more easily synchronize data between team members. The data is self-hosted
-in LIVE server 1 (10.28.128.86), where you can login with your VUID
-credentials. Here are the instructions to acquire the data.
+This repo includes the source code and the data for the [AIED2024 submission](https://link.springer.com/chapter/10.1007/978-3-031-64299-9_1). The related data can be downloaded from this Vanderbilt Box folder: [link](). Store this information within the empty ``data`` directory at the root of the Github repo. This ``data`` folder in the Vanderbilt box includes generated artefacts from the scripts along with human annotations/corrections that are necessary for runnign the scripts.
 
-First, install DVC with version 2.5.4 with the command below. This version
-was selected as a safety precaution for DVC's latest release is having some
-issues with SSH self-hosted options.
+The gaze pipeline within the ``scripts/gaze`` directory is composed of the following linear sequence:
+1. ``reid.ipynb``: We started with a semi-automated ReID (a precursor of the ReID project in the OELE lab) that uses facial recognition, from the ``deepface`` [PyPI package](https://pypi.org/project/deepface/), that matches the face with the larger body bounding boxes. Manual corrections were needed, since facial recogntion was error prone with children participants.
+2. ``depth_estimation.ipynb``: Used [ZoeDepth](https://github.com/isl-org/ZoeDepth) to perform metric depth estimation on the entire RGB videos and generated depth videos.
+3. ``gaze_estimation.ipynb``: Used [L2-CSNet](https://github.com/Ahmednull/L2CS-Net) to perform gaze estimation on the videos with face crops.
+4. ``reconstruction3d.ipynb``: This is the bulk of the work, including the 3D gaze and Object-Of-Interest encoding. This file performs a ``process`` that takes the tracking, video, depth, and gaze and reconstructs the entire 3D scene as a point cloud, 3D bounding boxes, and 3D gaze rays. Using a custom 3D video plotter named [Plot3D](https://github.com/edavalosanaya/Plot3d), which could be replaced with the more reliable Open3D Visualizer, we could visualize the reconstructed 3D scene and its progression throughout the session. Within this code, we perform the following: 
+    - Use human-annotated positions of the floor and projector, using the [Vision6D](https://github.com/InteractiveGL/vision6D) tool to manually place these objects in the 3D scene.
+    - Using the depth video, place the 3D gaze vector and bounding box matching each participant.
+    - Perform gaze ray tracking using Trimesh to identify what person or object a participant is looking at.
+    - Display the 3D scene with Plot3D and tag each video frame with PersonA->Object/PersonB information.
+5. ``final_merge.ipynb``: Lastly, this script meets the requirement of the output format -- time-window, pooled at N seconds, and the gaze target IDs match the human-readable ID (e.g., Taylor Swift instead of Student1).
 
-```
-pip install dvc==2.5.4
-```
-
-Once dvc is installed, add your VUID credentials with the following command:
-
-```
-dvc remote modify --local live1-server user {your VUID username}
-dvc remote modify --local live1-server password {your VUID password}
-```
-
-> :warning: Make sure to use `--local` in the command above to storing your
-password locally and avoid storing it within the GitHub repo
-
-Now you have finish configuring DVC, you should be able to execute dvc commands
-(e.g. ``add``, ``commit``, ``push``, and ``pull``) to perform version control
-operations on the data. To start, use the following command to obtain
-the latest version of the data:
-
-```
-dvc pull
-```
-
-
-If you get the following error while trying to ``dvc pull`` or ``dvc doctor``:
-
-> ERROR: unexpected error - redefinition of group name 'ps_d' as group 2; was group 1 at position 46
-
-This is caused by an incompatibility with pathspec 0.10.0, which was released 2022-08-30. Downgrading to pathspec 0.9.0 should fix this issue.
-
-```
-pip install pathspec==0.9.0 --force-reinstall
-```
-
+For future data analysis, I recommend the following suggestions: 
+1. **ReID.** The ReID pipeline needs to be updated to take advantage of Ashwin et al.'s newer and more powerful ReID pipeline.
+2. **Depth.** Use the depth stereo cameras from Luxonis such as the Oak-D Pro W that were recently purchased by the OELE lab.
+3. **3D Video Plotting.** Instead of using the poorly documented and custom-made Plot3D, I recommend using the better established [Open3D Visualizer](https://www.open3d.org/docs/latest/python_api/open3d.visualization.Visualizer.html), with non-blocking visualization to support the real-time updates from video -- [docs](https://www.open3d.org/docs/release/tutorial/visualization/non_blocking_visualization.html) found here.
+4. **Gaze Estimation.** L2-CSNet is convenient and easy to use -- however; it's performance is lacking and there is likely to be a much better performing gaze estimation method available now.
