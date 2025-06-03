@@ -8,6 +8,19 @@ Within this repo, the code required to perform 3D gaze, including depth estimati
 
 This repo includes the source code and the data for the [AIED2024 submission](https://link.springer.com/chapter/10.1007/978-3-031-64299-9_1). Store the data located in the Vanderbilt Box shared folder within the empty ``data`` directory at the root of the Github repo. This ``data`` folder in the Vanderbilt box includes generated artefacts from the scripts along with human annotations/corrections that are necessary for runnign the scripts.
 
+## Preprocessing Step
+
+Once finished downloading the data located in the Vanderbilt box, please unzip the following files:
+
+```
+reid/cropped_faces/d1g1.zip -> reid/cropped_faces/d1g1/
+reid/cropped_faces/d1g2.zip -> reid/cropped_faces/d1g2/
+reid/cropped_faces/d2g1.zip -> reid/cropped_faces/d2g1/
+reid/cropped_faces/d2g2.zip -> reid/cropped_faces/d2g2/
+```
+
+This was required for uploading the raw directories resulted in failed uploads.
+
 # Script Organization and Purpose
 
 The gaze pipeline within the ``scripts/gaze`` directory is composed of the following linear sequence:
